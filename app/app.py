@@ -1,4 +1,5 @@
 import sys
+import os
 import requests
 import psycopg2
 import calendar
@@ -12,11 +13,11 @@ column_names = ["id", "weather_state_name", "wind_direction_compass", "created",
                     "applicable_date", "min_temp", "max_temp", "the_temp"]
 
 db_params = {
-    "host": 'terraform-20210726165212317900000004.cij2bgzi6jqj.us-east-1.rds.amazonaws.com',
-    "database": "weather",
-    "user": "epam",
-    "password": "SSpassword",
-    "port": "5432"
+    "host": os.environ.get('DB_HOST'),
+    "database": os.environ.get('DB_NAME'),
+    "user": os.environ.get('DB_USER'),
+    "password": os.environ.get('DB_PASSWORD'),
+    "port": os.environ.get('DB_PORT')
 }
 
 def get_weather_result(city_id, date):
