@@ -102,8 +102,6 @@ if __name__ == '__main__':
      app.run()
 
 
-
-
 # def tableInsert(item):
 #     try:
 #         conn = connect(db_params)
@@ -123,53 +121,4 @@ if __name__ == '__main__':
 #             conn.close()
 #             print("PostgreSQL connection is closed")
 
-# app = Flask(__name__)
-#
-# @app.route('/')
-# def index():
-#     return render_template('index.html',list_of_date=list_of_date)
-#
-# @app.route('/results', methods=['GET', 'POST'])
-# def render_results():
-#     select = request.form['date_select']
-#     conn = connect(db_params)
-#     sql_query = """SELECT * FROM weather WHERE applicable_date = '{}' ORDER BY created;""".format(select)
-#     date_weather = postgresql_query(conn, sql_query)
-#     conn.close()
-#     return render_template("results.html", select=select, date_weather=date_weather, list_of_date=list_of_date)
-#
-# @app.route('/update', methods=['GET', 'POST'])
-# def update():
-#
-#     return render_template('results.html')
-#
-# @app.route('/delete', methods=['GET', 'POST'])
-# def delete():
-#     conn = connect(db_params)
-#     cursor = conn.cursor()
-#     cursor.execute("""DELETE FROM weather;""")
-#     conn.commit()
-#     conn.close()
-#     return render_template('delete.html')
-#
-# if __name__ == '__main__':
-#      app.run()
-#
-#
-#
-# def get_city_id(city_name):
-#     url_city = "https://www.metaweather.com/api/location/search/?query={}".format(city_name)
-#     return requests.get("https://www.metaweather.com/api/location/search/?query={}".format('Moscow')).json()[0]['woeid']
-#
-# def get_weather_result(city_id, date):
-#     url = "https://www.metaweather.com/api/location/{}/{}".format(city_id, date)
-#     weather_result = requests.get(url)
-#     return weather_result.json()
-#
-# db_params = {
-#     "host": '192.168.208.138',
-#     "database": "weather",
-#     # "user": "epam",
-#     # "password": "SSpassword",
-#     "port": "5432"
-# }
+
