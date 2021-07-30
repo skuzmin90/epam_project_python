@@ -13,11 +13,15 @@ column_names = ["id", "weather_state_name", "wind_direction_compass", "created",
                     "applicable_date", "min_temp", "max_temp", "the_temp"]
 
 db_params = {
-    "host": os.environ.get('DB_HOST'),
-    "database": os.environ.get('DB_NAME'),
-    "user": os.environ.get('DB_USER'),
-    "password": os.environ.get('DB_PASSWORD'),
-    "port": os.environ.get('DB_PORT')
+    "host": "192.168.208.138",
+    "database": "weather",
+    "user": "postgres",
+    "port": "5432"
+    # "host": os.environ.get('DB_HOST'),
+    # "database": os.environ.get('DB_NAME'),
+    # "user": os.environ.get('DB_USER'),
+    # "password": os.environ.get('DB_PASSWORD'),
+    # "port": os.environ.get('DB_PORT')
 }
 
 def get_weather_result(city_id, date):
@@ -37,19 +41,26 @@ def connect(db_params):
     return conn
 
 def insertTable():
-    conn = connect(db_params)
-    cursor = conn.cursor()
-    cursor.execute(""" CREATE TABLE IF NOT EXISTS forecast (id bigint UNIQUE, weather_state_name varchar(45),\
+    try:
+        conn = connect(db_params)
+        cursor = conn.cursor()
+        cursor.execute(""" CREATE TABLE IF NOT EXISTS forecast (id bigint UNIQUE, weather_state_name varchar(45),\
             wind_direction_compass varchar(45), created varchar(45), applicable_date varchar(45), min_temp integer,\
             max_temp integer, the_temp integer); """)
-    for date in days:
-        result = get_weather_result(city_id, date)
-        for item in result:
-            sql = """ INSERT INTO forecast VALUES (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT (id) DO NOTHING; """
-            table_data = [item[column] for column in column_names]
-            cursor.execute(sql, table_data)
-    conn.commit()
-    conn.close()
+        for date in days:
+            result = get_weather_result(city_id, date)
+            for item in result:
+                sql = """ INSERT INTO forecast VALUES (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT (id) DO NOTHING; """
+                table_data = [item[column] for column in column_names]
+                cursor.execute(sql, table_data)
+                conn.commit()
+    except (Exception, psycopg2.Error) as error:
+        print("Failed inserting record into mobile table {}".format(error))
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+            print("PostgreSQL connection is closed")
 
 def updateTable():
     conn = connect(db_params)
