@@ -13,15 +13,15 @@ column_names = ["id", "weather_state_name", "wind_direction_compass", "created",
                     "applicable_date", "min_temp", "max_temp", "the_temp"]
 
 db_params = {
-    # "host": "192.168.208.138",
-    # "database": "weather",
-    # "user": "postgres",
-    # "port": "5432"
-    "host": os.environ.get('DB_HOST'),
-    "database": os.environ.get('DB_NAME'),
-    "user": os.environ.get('DB_USER'),
-    "password": os.environ.get('DB_PASSWORD'),
-    "port": os.environ.get('DB_PORT')
+    "host": "192.168.208.138",
+    "database": "weather",
+    "user": "postgres",
+    "port": "5432"
+    # "host": os.environ.get('DB_HOST'),
+    # "database": os.environ.get('DB_NAME'),
+    # "user": os.environ.get('DB_USER'),
+    # "password": os.environ.get('DB_PASSWORD'),
+    # "port": os.environ.get('DB_PORT')
 }
 
 def get_weather_result(city_id, date):
