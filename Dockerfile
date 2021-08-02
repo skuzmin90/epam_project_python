@@ -1,6 +1,4 @@
-#FROM tiangolo/uwsgi-nginx-flask:python3.6
-
-FROM python3.6
+FROM tiangolo/uwsgi-nginx-flask:python3.6
 
 MAINTAINER sergei_kuzmin1@epam.com
 
