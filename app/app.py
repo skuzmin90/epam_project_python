@@ -13,10 +13,11 @@ column_names = ["id", "weather_state_name", "wind_direction_compass", "created",
                     "applicable_date", "min_temp", "max_temp", "the_temp"]
 
 db_params = {
-    "host": "192.168.208.138",
+    "host": "weather.cij2bgzi6jqj.us-east-1.rds.amazonaws.com",
     "database": "weather",
-    "user": "postgres",
-    "port": "5432"
+    "user": "epam",
+    "port": "5432",
+    "password": "SSpassword"
     # "host": os.environ.get('DB_HOST'),
     # "database": os.environ.get('DB_NAME'),
     # "user": os.environ.get('DB_USER'),
