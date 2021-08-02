@@ -13,7 +13,7 @@ column_names = ["id", "weather_state_name", "wind_direction_compass", "created",
                     "applicable_date", "min_temp", "max_temp", "the_temp"]
 
 db_params = {
-    "host": "terraform-2021080211180967210000000a.cij2bgzi6jqj.us-east-1.rds.amazonaws.com",
+    "host": "terraform-2021080214383663760000000a.cij2bgzi6jqj.us-east-1.rds.amazonaws.com",
     "database": "weather",
     "user": "epam",
     "port": "5432",
