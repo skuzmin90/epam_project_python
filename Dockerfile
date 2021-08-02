@@ -1,5 +1,5 @@
-FROM tiangolo/uwsgi-nginx-flask:python3.6
-
+#FROM tiangolo/uwsgi-nginx-flask:python3.6
+FROM python:3.7
 MAINTAINER sergei_kuzmin1@epam.com
 
 WORKDIR /app
