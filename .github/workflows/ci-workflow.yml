@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Create Docker-compose environment
-        run: docker-compose up -d --build
+        run: docker-compose up -d
 
       - name: Test our Docker-compose environment
         run: docker exec -it flask-webapp pytest
@@ -45,3 +45,4 @@ jobs:
 
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
+    needs: [test]
