@@ -32,6 +32,9 @@ services:
     ports:
       - "80:5000"
     depends_on:
+      postgres:
+        condition: service_healthy
+    links:
       - postgres
     networks:
       - bridge
