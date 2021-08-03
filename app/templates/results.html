@@ -30,12 +30,9 @@
               </select>
       </div>
     <button style="font-size: 2ch; font-family:Verdana, Geneva, Tahoma, sans-serif; color: azure; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type="submit" class="btn btn-default">Forecast</button>
-    <form action="{{ url_for('index') }}">
-      <input style="font-size: 2ch; border: 2cm; font-family:Verdana, Geneva, Tahoma, sans-serif; color: white; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type="submit" name="main" value="Main page"/>
+    <form action="{{ url_for('update') }}">
+      <input style="font-size: 2ch; border: 2cm; font-family:Verdana, Geneva, Tahoma, sans-serif; color: white; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type="submit" name="update" value="Update"/>
     </form>
-        <form action = "{{ url_for('remove') }}">
-              <input style = "font-size: 2ch; border: 2cm; font-family:Verdana, Geneva, Tahoma, sans-serif; color: white; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type = "submit" name = "remove" value = "Remove"/>
-        </form>
     </div>
 </form>
 <div>

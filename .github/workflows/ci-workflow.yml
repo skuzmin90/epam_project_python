@@ -15,12 +15,28 @@ jobs:
       - uses: actions/checkout@v2
       - name: Create Docker-compose environment
         run: docker-compose up -d --build
+
       - name: Test our Docker-compose environment
         run: docker exec -it flask-webapp pytest
-
   docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: |
+              name/epam_project_python
+              ghcr.io/archi90/epam_project_python
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+
     - name: Check Out Repo 
       uses: actions/checkout@v2
 
@@ -41,7 +57,8 @@ jobs:
         context: ./
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/epam_devops_forecast_app:latest
-
+#        tags: ${{ secrets.DOCKERHUB_USERNAME }}/epam_devops_forecast_app:latest
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}

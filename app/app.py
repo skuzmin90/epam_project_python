@@ -13,10 +13,10 @@ column_names = ["id", "weather_state_name", "wind_direction_compass", "created",
                     "applicable_date", "min_temp", "max_temp", "the_temp"]
 
 db_params = {
-    "host": "postgres",
+    "host": "192.168.208.138",
     "database": "weather",
     "user": "postgres",
-    "password": "SSpassword",
+    # "password": "SSpassword",
     "port": "5432",
     # "password": "SSpassword"
     # "host": os.environ.get('DB_HOST'),
@@ -98,27 +98,21 @@ def index():
 
 @app.route('/results', methods=['POST','GET'])
 def results():
+    global select, date_weather
     select = request.form['date_select']
     conn = connect(db_params)
     sql_query = """SELECT * FROM forecast WHERE applicable_date = '{}' ORDER BY created;""".format(select)
     date_weather = postgresql_query(conn, sql_query)
     conn.close()
     return render_template('results.html', select=select, date_weather=date_weather, list_of_date=list_of_date)
-#
-@app.route('/remove', methods=['GET', 'POST'])
-def remove():
-    conn = connect(db_params)
-    cursor = conn.cursor()
-    cursor.execute("TRUNCATE TABLE %s" % 'forecast')
-    conn.commit()
-    conn.close()
-    return render_template('remove.html')
 
-@app.route('/update', methods=['GET', 'POST'])
+@app.route('/update', methods=['POST','GET'])
 def update():
     try:
         conn = connect(db_params)
         cursor = conn.cursor()
+        cursor.execute(""" TRUNCATE forecast;  """)
+        conn.commit()
         for date in days:
             result = get_weather_result(city_id, date)
             for item in result:
@@ -128,7 +122,7 @@ def update():
                 conn.commit()
     except (Exception, psycopg2.Error) as error:
         print("Failed inserting record into mobile table {}".format(error))
-    return render_template('index.html', list_of_date=list_of_date)
+    return render_template('results.html', select=select, date_weather=date_weather, list_of_date=list_of_date)
 
 if __name__ == '__main__':
      app.run()
