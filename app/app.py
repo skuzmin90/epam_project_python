@@ -13,11 +13,11 @@ column_names = ["id", "weather_state_name", "wind_direction_compass", "created",
                     "applicable_date", "min_temp", "max_temp", "the_temp"]
 
 db_params = {
-    "host": "terraform-2021080214383663760000000a.cij2bgzi6jqj.us-east-1.rds.amazonaws.com",
+    "host": "192.168.208.138",
     "database": "weather",
-    "user": "epam",
+    "user": "postgres",
     "port": "5432",
-    "password": "SSpassword"
+    # "password": "SSpassword"
     # "host": os.environ.get('DB_HOST'),
     # "database": os.environ.get('DB_NAME'),
     # "user": os.environ.get('DB_USER'),
