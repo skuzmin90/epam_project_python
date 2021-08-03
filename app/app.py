@@ -1,5 +1,4 @@
 import sys
-import os
 import requests
 import psycopg2
 import calendar
@@ -108,43 +107,15 @@ def results():
 
 @app.route('/update', methods=['POST','GET'])
 def update():
-    try:
-        conn = connect(db_params)
-        cursor = conn.cursor()
-        cursor.execute(""" TRUNCATE forecast;  """)
-        conn.commit()
-        for date in days:
-            result = get_weather_result(city_id, date)
-            for item in result:
-                sql = """ INSERT INTO forecast VALUES (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT (id) DO NOTHING; """
-                table_data = [item[column] for column in column_names]
-                cursor.execute(sql, table_data)
-                conn.commit()
-    except (Exception, psycopg2.Error) as error:
-        print("Failed inserting record into mobile table {}".format(error))
+    conn = connect(db_params)
+    cursor = conn.cursor()
+    cursor.execute(""" TRUNCATE forecast;  """)
+    insertTable()
+    conn.commit()
+    conn.close()
     return render_template('results.html', select=select, date_weather=date_weather, list_of_date=list_of_date)
 
 if __name__ == '__main__':
      app.run()
-
-
-# def tableInsert(item):
-#     try:
-#         conn = connect(db_params)
-#         cursor = conn.cursor()
-#         # cursor.execute(""" CREATE TABLE IF NOT EXISTS forecast (id bigint UNIQUE, weather_state_name varchar(45),\
-#         #  wind_direction_compass varchar(45), created varchar(45), applicable_date varchar(45), min_temp integer,\
-#         #   max_temp integer, the_temp integer); """)
-#         sql = """ INSERT INTO forecast VALUES (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT (id) DO NOTHING """
-#         table_data = [item[column] for column in column_names]
-#         cursor.execute(sql, tuple(table_data))
-#         conn.commit()
-#     except (Exception, psycopg2.Error) as error:
-#         print("Failed inserting record into mobile table {}".format(error))
-#     finally:
-#         if conn:
-#             cursor.close()
-#             conn.close()
-#             print("PostgreSQL connection is closed")
 
 
