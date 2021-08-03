@@ -16,7 +16,7 @@ db_params = {
     "host": "postgres",
     "database": "weather",
     "user": "postgres",
-    # "password": "SSpassword",
+    "password": "SSpassword",
     "port": "5432",
     # "password": "SSpassword"
     # "host": os.environ.get('DB_HOST'),
