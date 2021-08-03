@@ -16,7 +16,7 @@ db_params = {
     "database": "weather",
     "user": "postgres",
     "password": "SSpassword",
-    "port": "5432",
+    "port": "5432"
     # "password": "SSpassword"
     # "host": os.environ.get('DB_HOST'),
     # "database": os.environ.get('DB_NAME'),
@@ -57,11 +57,8 @@ def insertTable():
                 conn.commit()
     except (Exception, psycopg2.Error) as error:
         print("Failed inserting record into mobile table {}".format(error))
-    finally:
-        if conn:
-            cursor.close()
-            conn.close()
-            print("PostgreSQL connection is closed")
+    cursor.close()
+    conn.close()
 
 # def updateTable():
 #     conn = connect(db_params)
@@ -100,7 +97,7 @@ def results():
     global select, date_weather
     select = request.form['date_select']
     conn = connect(db_params)
-    sql_query = """SELECT * FROM forecast WHERE applicable_date = '{}' ORDER BY created;""".format(select)
+    sql_query = """ SELECT * FROM forecast WHERE applicable_date = '{}' ORDER BY created; """.format(select)
     date_weather = postgresql_query(conn, sql_query)
     conn.close()
     return render_template('results.html', select=select, date_weather=date_weather, list_of_date=list_of_date)
@@ -116,6 +113,9 @@ def update():
     return render_template('results.html', select=select, date_weather=date_weather, list_of_date=list_of_date)
 
 if __name__ == '__main__':
-     app.run()
+     app.run(host="0.0.0.0", port="5000")
+
+
+
 
 
