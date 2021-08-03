@@ -19,7 +19,7 @@
   <div style="position: absolute; ">
   <h2 style="font-size: xx-large; font-style: normal; font-family:Verdana, Geneva, Tahoma, sans-serif; color:white;">Welcome to the weather forecast</h2>
     <p2 style="font-size: large; font-weight: bolder; font-family:Verdana, Geneva, Tahoma, sans-serif; color:white;">Just pick up a date in the below form <br> and you will see forcast at this day.<br>Let's start!<br></p2>
-    <form class="form-inline" method="POST" action="{{ url_for('render_results') }}">
+    <form class="form-inline" method="post" action="{{ url_for('results') }}">
     <div class="form-group">
       <div class="input-group">
           <span class="input-group-addon" style="font-size: large; font-weight: bolder; font-family:Verdana, Geneva, Tahoma, sans-serif; color:white;">Please select a date: </span>
@@ -30,10 +30,8 @@
               </select>
       </div>
     <button style="font-size: 2ch; font-family:Verdana, Geneva, Tahoma, sans-serif; color: white; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type="submit" class="btn btn-default">Forecast</button>
-    <form action="{{ url_for('update') }}">
-        <input style="font-size: 2ch; border: 2cm; font-family:Verdana, Geneva, Tahoma, sans-serif; color: white; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type="submit" name="update_table" value="Update table"/>
-    </form>
   </div>
 </form>
+  </div>
 </body>
 </html>

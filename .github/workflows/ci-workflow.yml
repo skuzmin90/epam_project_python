@@ -1,11 +1,25 @@
-name: Docker CI
+name: Continuous Integrarion
 
 on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create Docker-compose environment
+        run: docker-compose up -d
+      - name: Test our Docker-compose environment
+        run:
+
+
+
   docker:
     runs-on: ubuntu-latest
     steps:

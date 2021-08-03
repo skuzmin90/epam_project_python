@@ -13,11 +13,12 @@ column_names = ["id", "weather_state_name", "wind_direction_compass", "created",
                     "applicable_date", "min_temp", "max_temp", "the_temp"]
 
 db_params = {
-    "host": "terraform-2021080306493790790000000a.cij2bgzi6jqj.us-east-1.rds.amazonaws.com",
+    "host": "postgres",
     "database": "weather",
-    "user": "epam",
+    "user": "postgres",
+    "password": "SSpassword",
     "port": "5432",
-    "password": "SSpassword"
+    # "password": "SSpassword"
     # "host": os.environ.get('DB_HOST'),
     # "database": os.environ.get('DB_NAME'),
     # "user": os.environ.get('DB_USER'),
@@ -63,13 +64,13 @@ def insertTable():
             conn.close()
             print("PostgreSQL connection is closed")
 
-def updateTable():
-    conn = connect(db_params)
-    cursor = conn.cursor()
-    cursor.execute("TRUNCATE TABLE %s" % 'forecast')
-    conn.commit()
-    conn.close()
-    return
+# def updateTable():
+#     conn = connect(db_params)
+#     cursor = conn.cursor()
+#     cursor.execute("TRUNCATE TABLE %s" % 'forecast')
+#     conn.commit()
+#     conn.close()
+#     return
 
 def postgresql_query(conn, select_query):
     cursor = conn.cursor()
@@ -89,27 +90,45 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    global list_of_date
     list_of_date = [item[0] for item in postgresql_query(conn=connect(db_params),
                                                          select_query="""SELECT DISTINCT(applicable_date)"
                                                              " FROM forecast ORDER BY applicable_date;""")]
     return render_template('index.html',list_of_date=list_of_date)
 
-@app.route('/results', methods=['GET', 'POST'])
-def render_results():
-    list_of_date = [item[0] for item in postgresql_query(conn=connect(db_params),
-                                                         select_query="""SELECT DISTINCT(applicable_date)"
-                                                                 " FROM forecast ORDER BY applicable_date;""")]
+@app.route('/results', methods=['POST','GET'])
+def results():
     select = request.form['date_select']
     conn = connect(db_params)
     sql_query = """SELECT * FROM forecast WHERE applicable_date = '{}' ORDER BY created;""".format(select)
     date_weather = postgresql_query(conn, sql_query)
     conn.close()
-    return render_template("results.html", select=select, date_weather=date_weather, list_of_date=list_of_date)
+    return render_template('results.html', select=select, date_weather=date_weather, list_of_date=list_of_date)
+#
+@app.route('/remove', methods=['GET', 'POST'])
+def remove():
+    conn = connect(db_params)
+    cursor = conn.cursor()
+    cursor.execute("TRUNCATE TABLE %s" % 'forecast')
+    conn.commit()
+    conn.close()
+    return render_template('remove.html')
 
 @app.route('/update', methods=['GET', 'POST'])
 def update():
-    updateTable()
-    return render_template('results.html')
+    try:
+        conn = connect(db_params)
+        cursor = conn.cursor()
+        for date in days:
+            result = get_weather_result(city_id, date)
+            for item in result:
+                sql = """ INSERT INTO forecast VALUES (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT (id) DO NOTHING; """
+                table_data = [item[column] for column in column_names]
+                cursor.execute(sql, table_data)
+                conn.commit()
+    except (Exception, psycopg2.Error) as error:
+        print("Failed inserting record into mobile table {}".format(error))
+    return render_template('index.html', list_of_date=list_of_date)
 
 if __name__ == '__main__':
      app.run()
