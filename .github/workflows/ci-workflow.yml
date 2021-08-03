@@ -57,8 +57,7 @@ jobs:
         context: ./
         file: ./Dockerfile
         push: true
-#        tags: ${{ secrets.DOCKERHUB_USERNAME }}/epam_devops_forecast_app:latest
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/epam_devops_forecast_app:${{ steps.meta.outputs.tags }}
+
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
