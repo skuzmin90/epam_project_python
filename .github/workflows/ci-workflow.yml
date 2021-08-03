@@ -17,7 +17,7 @@ jobs:
         run: docker-compose up -d
 
       - name: Test our Docker-compose environment
-        run: docker exec -it flask-webapp pytest
+        run: docker-compose exec -T flask-webapp pytest
   docker:
     runs-on: ubuntu-latest
     steps:
