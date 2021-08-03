@@ -22,6 +22,11 @@ services:
     image: postgres:12
     container_name: postgres
     restart: always
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "weather", "-U", "postgres" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
     environment:
       - POSTGRES_PASSWORD=SSpassword
       - POSTGRES_USER=postgres

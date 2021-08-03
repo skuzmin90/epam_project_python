@@ -14,9 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Create Docker-compose environment
-        run: docker-compose up -d
+        run: docker-compose up -d --build
       - name: Test our Docker-compose environment
-        run:
+        run: docker-compose exec -it pytest
 
 
 
