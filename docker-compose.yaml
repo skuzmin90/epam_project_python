@@ -3,21 +3,6 @@ networks:
   bridge:
     driver: bridge
 services:
-  web:
-    build: .
-    container_name: flask-webapp
-    environment:
-      - DB_USER=postgres
-      - DB_PASSWORD=SSpassword
-      - DB_HOST=postgres
-    volumes:
-      - ./app:/app
-    ports:
-      - "80:5000"
-    depends_on:
-      - postgres
-    networks:
-      - bridge
   postgres:
     image: postgres:12
     container_name: postgres
@@ -33,5 +18,20 @@ services:
       - POSTGRES_DB=weather
     ports:
       - "5432:5432"
+    networks:
+      - bridge
+  web:
+    build: .
+    container_name: flask-webapp
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=SSpassword
+      - DB_HOST=postgres
+    volumes:
+      - ./app:/app
+    ports:
+      - "80:5000"
+    depends_on:
+      - postgres
     networks:
       - bridge
