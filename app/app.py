@@ -13,7 +13,7 @@ column_names = ["id", "weather_state_name", "wind_direction_compass", "created",
                     "applicable_date", "min_temp", "max_temp", "the_temp"]
 
 db_params = {
-    "host": "192.168.208.138",
+    "host": "postgres",
     "database": "weather",
     "user": "postgres",
     # "password": "SSpassword",
