@@ -12,10 +12,10 @@ column_names = ["id", "weather_state_name", "wind_direction_compass", "created",
                     "applicable_date", "min_temp", "max_temp", "the_temp"]
 
 db_params = {
-    "host": "postgres",
+    "host": "192.168.208.138",
     "database": "weather",
     "user": "postgres",
-    "password": "SSpassword",
+    # "password": "SSpassword",
     "port": "5432"
     # "password": "SSpassword"
     # "host": os.environ.get('DB_HOST'),
@@ -82,20 +82,20 @@ def postgresql_query(conn, select_query):
 
 insertTable()
 
+list_of_date = [item[0] for item in postgresql_query(conn=connect(db_params),
+                                                         select_query="""SELECT DISTINCT(applicable_date)"
+                                                                 " FROM forecast ORDER BY applicable_date;""")]
+
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    global list_of_date
-    list_of_date = [item[0] for item in postgresql_query(conn=connect(db_params),
-                                                         select_query="""SELECT DISTINCT(applicable_date)"
-                                                             " FROM forecast ORDER BY applicable_date;""")]
     return render_template('index.html',list_of_date=list_of_date)
 
 @app.route('/results', methods=['POST','GET'])
 def results():
     global select, date_weather
-    select = request.form['date_select']
+    select = request.form['select']
     conn = connect(db_params)
     sql_query = """ SELECT * FROM forecast WHERE applicable_date = '{}' ORDER BY created; """.format(select)
     date_weather = postgresql_query(conn, sql_query)
@@ -113,7 +113,7 @@ def update():
     return render_template('results.html', select=select, date_weather=date_weather, list_of_date=list_of_date)
 
 if __name__ == '__main__':
-     app.run(host="0.0.0.0", port="5000")
+     app.run(debug=True)
 
 
 

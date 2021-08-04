@@ -28,7 +28,7 @@ services:
       - DB_PASSWORD=SSpassword
       - DB_HOST=postgres
     volumes:
-      - ./app:/app
+      - .:/app
     ports:
       - "80:5000"
     depends_on:

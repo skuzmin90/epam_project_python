@@ -22,8 +22,8 @@
     <form class="form-inline" method="post" action="{{ url_for('results') }}">
     <div class="form-group">
       <div class="input-group">
-          <span class="input-group-addon" style="font-size: large; font-weight: bolder; font-family:Verdana, Geneva, Tahoma, sans-serif; color:white;">Please select a date: </span>
-              <select style="color: cornflowerblue; border-radius: 5cm; font-family:Verdana, Geneva, Tahoma, sans-serif;" name="date_select" class="selectpicker form-control">
+          <span class="input-group-addon" style="font-size: large; font-weight: bolder; font-family:Verdana, Geneva, Tahoma, sans-serif; color:white;">Please choose a date: </span>
+              <select style="color: cornflowerblue; border-radius: 5cm; font-family:Verdana, Geneva, Tahoma, sans-serif;" name="select" class="selectpicker form-control">
                 {% for date in list_of_date %}
                   <option  value="{{ date }}" style="font-size: medium; font-family:Verdana, Geneva, Tahoma, sans-serif; font-weight: 400; background-color:rgb(196, 222, 223) ; border-radius: 5cm;">{{date}}</option>
                 {% endfor %}
