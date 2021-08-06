@@ -46,10 +46,10 @@ jobs:
       id: docker_build
       uses: docker/build-push-action@v2
       env:
-        DB_HOST: "192.168.208.138"
-        DB_NAME: "weather"
-        DB_USER: "epam"
-        DB_PASSWORD: "SSpassword"
+        DB_HOST: '${{ secrets.DB_HOST }}'
+        DB_NAME: '${{ secrets.DB_NAME }}'
+        DB_USER: '${{ secrets.DB_USER }}'
+        DB_PASSWORD: '${{ secrets.DB_PASSWORD }}'
       with:
         context: .
         file: ./Dockerfile
