@@ -7,7 +7,7 @@ on:
         - master
     pull_request:
       branches:
-       - master
+        - master
 
 jobs:
   test:
@@ -49,6 +49,7 @@ jobs:
         DB_HOST: "192.168.208.138"
         DB_NAME: "weather"
         DB_USER: "epam"
+        DB_PASSWORD: "SSpassword"
       with:
         context: .
         file: ./Dockerfile
