@@ -51,10 +51,7 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-webapp-${{ steps.extract_branch.outputs.branch }}:latest
-        DB_HOST: ${{ secrets.DB_HOST }}
-        DB_NAME: ${{ secrets.DB_NAME }}
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        build-args: DB_HOST=${{ secrets.DB_HOST }}, DB_NAME=${{ secrets.DB_NAME }}, DB_USER=${{ secrets.DB_USER }}, DB_PASSWORD=${{ secrets.DB_PASSWORD }}
 
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
