@@ -45,6 +45,10 @@ jobs:
     - name: Build and push
       id: docker_build
       uses: docker/build-push-action@v2
+      env:
+        DB_HOST: "192.168.208.138"
+        DB_NAME: "weather"
+        DB_USER: "epam"
       with:
         context: .
         file: ./Dockerfile
