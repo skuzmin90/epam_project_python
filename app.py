@@ -1,4 +1,5 @@
 import sys
+import os
 import requests
 import psycopg2
 import calendar
@@ -12,10 +13,10 @@ column_names = ["id", "weather_state_name", "wind_direction_compass", "created",
                     "applicable_date", "min_temp", "max_temp", "the_temp"]
 
 db_params = {
-    "host": "192.168.208.138",
-    "database": "weather",
-    "user": "postgres",
-    # "password": "SSpassword",
+    "host": os.getenv('DB_HOST'),
+    "database": os.getenv('DB_NAME'),
+    "user": os.getenv('DB_USER'),
+    "password": os.getenv('DB_PASSWORD'),
     "port": "5432"
     # "password": "SSpassword"
     # "host": os.environ.get('DB_HOST'),
