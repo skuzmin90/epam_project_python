@@ -49,7 +49,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-webapp-${{ steps.extract_branch.outputs.branch }}:latest
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-webapp:${{ steps.extract_branch.outputs.branch }}_${{ github.GITHUB_RUN_ID}}
 
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
