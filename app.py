@@ -18,11 +18,16 @@ db_params = {
     # "user": os.getenv('DB_USER'),
     # "password": os.getenv('DB_PASSWORD'),
     # "port": "5432"
-    "host": "terraform-2021080909324935470000000a.cij2bgzi6jqj.us-east-1.rds.amazonaws.com",
+    "host": "terraform-2021080914244468220000000a.cij2bgzi6jqj.us-east-1.rds.amazonaws.com",
     "database": "weather",
     "user": "epam",
     "password": "SSpassword",
     "port": "5432"
+    # "host": "192.168.208.138",
+    # "database": "weather",
+    # "user": "postgres",
+    # "password": "SSpassword",
+    # "port": "5432"
 }
 
 def get_weather_result(city_id, date):
@@ -94,13 +99,12 @@ def index():
 
 @app.route('/results', methods=['POST','GET'])
 def results():
-    global select, date_weather
-    select = request.form['select']
+    select = request.form.get('date_select')
     conn = connect(db_params)
     sql_query = """ SELECT * FROM forecast WHERE applicable_date = '{}' ORDER BY created; """.format(select)
     date_weather = postgresql_query(conn, sql_query)
     conn.close()
-    return render_template('results.html', select=select, date_weather=date_weather, list_of_date=list_of_date)
+    return render_template('results.html', select=select, list_of_date=list_of_date, date_weather=date_weather)
 
 @app.route('/update', methods=['POST','GET'])
 def update():
@@ -110,12 +114,7 @@ def update():
     insertTable()
     conn.commit()
     conn.close()
-    return render_template('results.html', select=select, date_weather=date_weather, list_of_date=list_of_date)
+    return render_template('results.html', list_of_date=list_of_date)
 
 if __name__ == '__main__':
-     app.run(debug=True)
-
-
-
-
-
+     app.run()
