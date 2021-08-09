@@ -2,6 +2,8 @@
 FROM python:3.7
 MAINTAINER sergei_kuzmin1@epam.com
 
+ENV DB_HOST=${DB_HOST}
+
 WORKDIR /app
 COPY . /app
 RUN pip3 install -r requirements.txt
