@@ -5,9 +5,11 @@ on:
     push:
       branches:
         - master
+        - test
     pull_request:
       branches:
         - master
+        - test
 
 jobs:
   test:
@@ -49,7 +51,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-webapp:${{ steps.extract_branch.outputs.branch }}_${{ github.run_number }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-webapp:${{ steps.extract_branch.outputs.branch }}:latest
 
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}

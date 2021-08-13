@@ -18,16 +18,6 @@ db_params = {
     "user": os.getenv('DB_USER'),
     "password": os.getenv('DB_PASSWORD'),
     "port": "5432"
-    # "host": "terraform-2021080914244468220000000a.cij2bgzi6jqj.us-east-1.rds.amazonaws.com",
-    # "database": "weather",
-    # "user": "epam",
-    # "password": "SSpassword",
-    # "port": "5432"
-    # "host": "192.168.208.138",
-    # "database": "weather",
-    # "user": "postgres",
-    # "password": "SSpassword",
-    # "port": "5432"
 }
 
 def get_weather_result(city_id, date):
@@ -64,14 +54,6 @@ def insertTable():
         print("Failed inserting record into mobile table {}".format(error))
     cursor.close()
     conn.close()
-
-# def updateTable():
-#     conn = connect(db_params)
-#     cursor = conn.cursor()
-#     cursor.execute("TRUNCATE TABLE %s" % 'forecast')
-#     conn.commit()
-#     conn.close()
-#     return
 
 def postgresql_query(conn, select_query):
     cursor = conn.cursor()
