@@ -34,7 +34,7 @@ jobs:
           curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
           unzip -qq sonar-scanner-cli-4.6.2.2472-linux.zip
           pwd
-          PATH=$PATH:/home/runner/work/forecast-app/forecast-app/sonar-scanner-cli-4.6.2.2472-linux/bin/
+          PATH=$PATH:/home/runner/work/forecast-app/forecast-app/sonar-scanner-cli-4.6.2.2472-linux/bin
           echo $PATH
           sonar-scanner -v
 #          sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner \
