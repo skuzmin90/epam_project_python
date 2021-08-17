@@ -32,7 +32,7 @@ jobs:
       - name: Run sonar-scanner
         run: |
           curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-          unzip -qq sonar-scanner-cli-4.6.2.2472-linux.zip
+          unzip -qq ./sonar-scanner-cli-4.6.2.2472-linux.zip
           ls -la sonar-scanner-cli-4.6.2.2472-linux/
           ls -la sonar-scanner-cli-4.6.2.2472-linux/bin/
           pwd
