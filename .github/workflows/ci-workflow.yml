@@ -31,8 +31,8 @@ jobs:
         working-directory: ./sonarqube
         run: |
           curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-          unzip ./sonar-scanner-cli-4.6.2.2472-linux.zip
-          ./sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner
+          unzip sonar-scanner-cli-4.6.2.2472-linux.zip
+          sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
             -Dsonar.sources=.
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
