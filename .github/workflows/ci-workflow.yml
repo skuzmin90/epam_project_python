@@ -36,7 +36,6 @@ jobs:
           ls -la sonar-scanner-cli-4.6.2.2472-linux/
           ls -la sonar-scanner-cli-4.6.2.2472-linux/bin/
           pwd
-#          PATH=$PATH:/sonar-scanner-cli-4.6.2.2472-linux/bin
           echo $PATH
 #          sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner \
 #          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
