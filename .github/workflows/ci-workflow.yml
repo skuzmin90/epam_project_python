@@ -21,7 +21,6 @@ jobs:
           fetch-depth: 0
 
       - name: Install sonarqube
-        uses: docker/build-push-action@v2
         run: |
           docker run -d --name sonarqube -v /sonarqube/sonarqube_data:/opt/sonarqube/data \
           -v /sonarqube/sonarqube_extensions:/opt/sonarqube/extensions \
