@@ -32,14 +32,12 @@ jobs:
       - name: Run sonar-scanner
         run: |
           curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-          ls -la
           unzip sonar-scanner-cli-4.6.2.2472-linux.zip
-          ls -la
-#          ./sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner \
-#          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-#          -Dsonar.sources=. \
-#          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-#          -Dsonar.projectKey=forecast-app
+          ./sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+          -Dsonar.projectKey=forecast-app
 
 #      - uses: sonarsource/sonarqube-scan-action@master
 #        env:
