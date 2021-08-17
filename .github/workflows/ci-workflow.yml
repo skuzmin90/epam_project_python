@@ -23,11 +23,10 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-       - uses: sonarsource/sonarqube-quality-gate-action@master
-         timeout-minutes: 5
-         env:
-           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
+      - uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   test:
     runs-on: ubuntu-latest
     steps:
@@ -37,7 +36,6 @@ jobs:
 
       - name: Test our Docker-compose environment
         run: docker exec flask-webapp pytest
-
   docker:
     needs: [test]
     runs-on: ubuntu-latest
