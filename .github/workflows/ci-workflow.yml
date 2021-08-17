@@ -27,13 +27,9 @@ jobs:
           -v /sonarqube/sonarqube_extensions:/opt/sonarqube/extensions \
           -v /sonarqube/sonarqube_logs:/opt/sonarqube/logs -v /sonarqube/sonarqube_temp:/opt/sonarqube/temp \
           -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest
-
-      - name: Run sonar-scanner
-        working-directory: ./sonarqube
-        run: |
           curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
           unzip sonar-scanner-cli-4.6.2.2472-linux.zip
-          ./sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner \
+          sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
           -Dsonar.sources=. \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
