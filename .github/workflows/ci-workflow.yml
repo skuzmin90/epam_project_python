@@ -1,4 +1,4 @@
-name: Continuous Integrarion
+name: Build Application
 
 on:
   workflow_dispatch:
