@@ -36,9 +36,8 @@ jobs:
           pwd
           PATH=$PATH:/home/runner/work/forecast-app/forecast-app/sonar-scanner-cli-4.6.2.2472-linux/bin
           echo $PATH
-          which sonar-scanner
-          sonar-scanner -v
           cd ./sonar-scanner-cli-4.6.2.2472-linux/bin && ls -la
+          cd sonar-scanner-cli-4.6.2.2472-linux/bin && ls -la
 #          sonar-scanner-cli-4.6.2.2472-linux/bin/sonar-scanner \
 #          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
 #          -Dsonar.sources=. \
