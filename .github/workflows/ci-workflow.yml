@@ -34,8 +34,9 @@ jobs:
             -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.sources=. \
             -Dsonar.working.directory=. \
-            -Dsonar.host.url="${{ steps.sonarqube.outputs.sonarqube_ip }}":9000 \
+            -Dsonar.host.url="${{ sonarqube_ip }}":9000 \
             -Dsonar.projectKey=forecast-app
+
 #      - name: Run sonar-scanner
 #        run: |
 #          curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
