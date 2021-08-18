@@ -34,6 +34,7 @@ jobs:
           sonar-scanner \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.sources=. \
+            -Dsonar.working.directory=. \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
             -Dsonar.projectKey=forecast-app
 
