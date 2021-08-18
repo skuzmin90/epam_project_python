@@ -4,7 +4,7 @@ import requests
 import psycopg2
 import calendar
 from datetime import datetime
-from flask import Flask, render_template,request
+from flask import Flask, render_template, request
 
 city_id = requests.get("https://www.metaweather.com/api/location/search/?query={}".format('Moscow')).json()[0]['woeid']
 num_days = calendar.monthrange(datetime.now().year, datetime.now().month)[1]
@@ -36,7 +36,7 @@ def connect(db_params):
     # print("Connection successful")
     return conn
 
-def insertTable():
+def insert_table():
     try:
         conn = connect(db_params)
         cursor = conn.cursor()
@@ -67,7 +67,7 @@ def postgresql_query(conn, select_query):
     cursor.close()
     return res
 
-insertTable()
+insert_table()
 
 list_of_date = [item[0] for item in postgresql_query(conn=connect(db_params),
                                                          select_query="""SELECT DISTINCT(applicable_date)"
@@ -93,7 +93,7 @@ def update():
     conn = connect(db_params)
     cursor = conn.cursor()
     cursor.execute(""" TRUNCATE forecast;  """)
-    insertTable()
+    insert_table()
     conn.commit()
     conn.close()
     return render_template('results.html', list_of_date=list_of_date)
