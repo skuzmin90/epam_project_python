@@ -29,12 +29,12 @@ jobs:
           curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
           unzip -qq sonar-scanner-cli-4.6.2.2472-linux.zip
           PATH=$PATH:/home/runner/work/forecast-app/forecast-app/sonar-scanner-4.6.2.2472-linux/bin
-          docker ps -a
+          ufw disable
           sonar-scanner \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.sources=. \
             -Dsonar.working.directory=. \
-            -Dsonar.host.url=http://127.0.0.1:9000/ \
+            -Dsonar.host.url=http://localhost:9000/ \
             -Dsonar.projectKey=forecast-app
 
 #      - name: Run sonar-scanner
