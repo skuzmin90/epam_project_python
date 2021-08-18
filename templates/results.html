@@ -30,13 +30,13 @@
         </div>
         <button style="font-size: 2ch; font-family:Verdana, Geneva, Tahoma, sans-serif; color: azure; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type="submit" class="btn btn-default">Forecast</button>
         <form action="{{ url_for('update') }}">
-            <input style="font-size: 2ch; border: 2cm; font-family:Verdana, Geneva, Tahoma, sans-serif; color: white; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type="submit" name="update" value="Update"/>
+            <input style="font-size: 2ch; border: 2cm; font-family:Verdana, Geneva, Tahoma, sans-serif; color: white; background-color:lightskyblue; border-radius: 5cm; font-weight: 700;" type="submit" name="update" value="Update"/>
         </form>
     </div>
 </form>
 <div>
-    <h2 style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: small; font: bold; color: white;">Below you can see weather at {{select}} in Moscow</h2>
-    <table border="1" style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size:small; font: bold; color:dodgerblue ; border: 2cm;">
+    <h2 style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: small; color: white;">Below you can see weather at {{select}} in Moscow</h2>
+    <table border="1" style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size:small; color:dodgerblue ; border: 2cm;">
         <caption>Weather results for {{select}} in Moscow</caption>
         <tr style="border: 4px; border-radius: 2cm;"></tr>
         <th id="id">ID</th>
