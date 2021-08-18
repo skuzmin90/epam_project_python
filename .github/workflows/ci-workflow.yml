@@ -39,6 +39,11 @@ jobs:
 #            -Dsonar.host.url=http://localhost:9000/ \
 #            -Dsonar.projectKey=forecast-app
 
+      - name: Sleep for 30 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '30s'
+
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
         env:
