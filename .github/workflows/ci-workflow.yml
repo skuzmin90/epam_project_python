@@ -35,7 +35,7 @@ jobs:
             -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.sources=. \
             -Dsonar.working.directory=. \
-            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+            -Dsonar.host.url=http://localhost:9000 \
             -Dsonar.projectKey=forecast-app
 
 #      - uses: sonarsource/sonarqube-scan-action@master
