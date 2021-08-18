@@ -12,21 +12,21 @@ on:
       - test
 
 jobs:
-  sonarqube:
-    name: Sonarqube
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Install sonarqube
-        id: sonarqube
-        run: |
-          docker run -d --name sonarqube \
-          -v /sonarqube/sonarqube_data:/opt/sonarqube/data \
-          -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest
-          echo ::set-output name=sonarqube_ip::$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' sonarqube)
+#  sonarqube:
+#    name: Sonarqube
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Install sonarqube
+#        id: sonarqube
+#        run: |
+#          docker run -d --name sonarqube \
+#          -v /sonarqube/sonarqube_data:/opt/sonarqube/data \
+#          -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest
+#          echo ::set-output name=sonarqube_ip::$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' sonarqube)
 
 #          curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
 #          unzip -qq sonar-scanner-cli-4.6.2.2472-linux.zip
@@ -39,11 +39,11 @@ jobs:
 #            -Dsonar.host.url=http://localhost:9000/ \
 #            -Dsonar.projectKey=forecast-app
 
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: http://localhost:9000
+#      - name: SonarQube Scan
+#        uses: sonarsource/sonarqube-scan-action@master
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#          SONAR_HOST_URL: http://localhost:9000
 
 #       - name: Run sonar-scanner
 #        run: |
