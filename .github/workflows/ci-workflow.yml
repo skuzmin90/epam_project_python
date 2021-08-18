@@ -48,7 +48,7 @@ jobs:
         uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: http://localhost:9000
+          SONAR_HOST_URL: http://${{ steps.sonarqube.outputs.sonarqube_ip }}:9000
 
 #       - name: Run sonar-scanner
 #        run: |
