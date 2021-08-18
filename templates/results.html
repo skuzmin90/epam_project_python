@@ -16,37 +16,37 @@
     <title>Weather Application For EPAM</title>
 </head>
 <body>
-  <div style="position: absolute; ">
-  <h2 style="font-size: xx-large; font-style: normal; font-family:Verdana, Geneva, Tahoma, sans-serif; color: rgb(255, 255, 255);">Welcome to the weather forecast</h2>
-    <p2 style="font-size: large; font-weight: bolder; font-family:Verdana, Geneva, Tahoma, sans-serif; color: rgb(255, 255, 255);">Just pick up a date in the below form <br> and you will see forcast at this day.<br>Let's start!<br></p2>
-    <form class="form-inline" method="post" action="{{ url_for('results') }}">
+<h2 style="font-size: xx-large; font-style: normal; font-family:Verdana, Geneva, Tahoma, sans-serif; color: rgb(255, 255, 255);">Welcome to the weather forecast</h2>
+<p2 style="font-size: large; font-weight: bolder; font-family:Verdana, Geneva, Tahoma, sans-serif; color: rgb(255, 255, 255);">Just pick up a date in the below form <br> and you will see forcast at this day.<br>Let's start!<br></p2>
+<form class="form-inline" method="post" action="{{ url_for('results') }}">
     <div class="form-group">
-      <div class="input-group">
-          <span class="input-group-addon" style="font-size: large; font-weight: bolder; font-family:Verdana, Geneva, Tahoma, sans-serif; color: rgb(255, 255, 255);">Please select a date: </span>
-              <select style="color:cornflowerblue; border-radius: 5cm; font-family:Verdana, Geneva, Tahoma, sans-serif;" name="date_select" class="selectpicker form-control">
+        <div class="input-group">
+            <span class="input-group-addon" style="font-size: large; font-weight: bolder; font-family:Verdana, Geneva, Tahoma, sans-serif; color: rgb(255, 255, 255);">Please select a date: </span>
+            <select style="color:cornflowerblue; border-radius: 5cm; font-family:Verdana, Geneva, Tahoma, sans-serif;" name="date_select" class="selectpicker form-control">
                 {% for date in list_of_date %}
-                  <option  value="{{ date }}" style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: medium; font-weight: 400; background-color:rgb(196, 222, 223) ; border-radius: 5cm;">{{date}}</option>
+                <option  value="{{ date }}" style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: medium; font-weight: 400; background-color:rgb(196, 222, 223) ; border-radius: 5cm;">{{date}}</option>
                 {% endfor %}
-              </select>
-      </div>
-    <button style="font-size: 2ch; font-family:Verdana, Geneva, Tahoma, sans-serif; color: azure; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type="submit" class="btn btn-default">Forecast</button>
-    <form action="{{ url_for('update') }}">
-      <input style="font-size: 2ch; border: 2cm; font-family:Verdana, Geneva, Tahoma, sans-serif; color: white; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type="submit" name="update" value="Update"/>
-    </form>
+            </select>
+        </div>
+        <button style="font-size: 2ch; font-family:Verdana, Geneva, Tahoma, sans-serif; color: azure; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type="submit" class="btn btn-default">Forecast</button>
+        <form action="{{ url_for('update') }}">
+            <input style="font-size: 2ch; border: 2cm; font-family:Verdana, Geneva, Tahoma, sans-serif; color: white; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type="submit" name="update" value="Update"/>
+        </form>
     </div>
 </form>
 <div>
     <h2 style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: small; font: bold; color: white;">Below you can see weather at {{select}} in Moscow</h2>
     <table border="1" style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size:small; font: bold; color:dodgerblue ; border: 2cm;">
+        <caption>Weather results for {{select}} in Moscow</caption>
         <tr style="border: 4px; border-radius: 2cm;"></tr>
-        <th>ID</th>
-        <th>WEATHER</th>
-        <th>WIND_DIRECTION</th>
-        <th>CREATED</th>
-        <th>APPLICABLE</th>
-        <th>MIN</th>
-        <th>MAX</th>
-        <th>TEMP</th>
+        <th id="id">ID</th>
+        <th id="weather">WEATHER</th>
+        <th id="wind_direction">WIND_DIRECTION</th>
+        <th id="created">CREATED</th>
+        <th id="applicable">APPLICABLE</th>
+        <th id="temp_min">MIN</th>
+        <th id="temp_max">MAX</th>
+        <th id="temp">TEMP</th>
       </tr>
         {% for i in date_weather %}
       <tr>
