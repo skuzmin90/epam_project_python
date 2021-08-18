@@ -79,7 +79,6 @@ jobs:
 #          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   test:
-    needs: [sonarqube]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
