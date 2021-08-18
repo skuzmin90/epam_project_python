@@ -21,10 +21,15 @@ jobs:
           fetch-depth: 0
 
       - name: Install sonarqube
+        id: sonarqube
         run: |
           docker run -d --name sonarqube \
           -v /sonarqube/sonarqube_data:/opt/sonarqube/data \
           -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest
+          echo ::set-output name=sonarqube_ip::$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' sonarqube)
+
+      - name: Run sonar-scanner
+        run: |
           curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
           unzip -qq sonar-scanner-cli-4.6.2.2472-linux.zip
           PATH=$PATH:/home/runner/work/forecast-app/forecast-app/sonar-scanner-4.6.2.2472-linux/bin
@@ -32,7 +37,7 @@ jobs:
             -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.sources=. \
             -Dsonar.working.directory=. \
-            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.host.url="${{ steps.sonarqube.outputs.sonarqube_ip }}":9000 \
             -Dsonar.projectKey=forecast-app
 
 #      - name: Run sonar-scanner
