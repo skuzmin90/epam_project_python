@@ -73,7 +73,6 @@ jobs:
         if: always()
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
 
-
 #  docker_build:
 #    needs: [test]
 #    runs-on: ubuntu-latest
