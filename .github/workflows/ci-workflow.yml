@@ -25,78 +25,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-#    name: Sonarqube
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#        with:
-#          fetch-depth: 0
-#
-#      - name: Install sonarqube
-#        id: sonarqube
-#        run: |
-#          docker run -d --name sonarqube \
-#          -v /sonarqube/sonarqube_data:/opt/sonarqube/data \
-#          -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest
-#          echo ::set-output name=sonarqube_ip::$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' sonarqube)
-#
-#      - name: Sleep for 60 seconds
-#        uses: jakejarvis/wait-action@master
-#        with:
-#          time: '60s'
-#
-#      - name: Run scanner
-#        run: |
-#          curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-#          unzip -qq sonar-scanner-cli-4.6.2.2472-linux.zip
-#          PATH=$PATH:/home/runner/work/forecast-app/forecast-app/sonar-scanner-4.6.2.2472-linux/bin
-#          sonar-scanner \
-#            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-#            -Dsonar.sources=. \
-#            -Dsonar.working.directory=. \
-#            -Dsonar.host.url=http://${{ steps.sonarqube.outputs.sonarqube_ip }}:9000 \
-#            -Dsonar.projectKey=forecast-app
-
-#      - name: SonarQube Scan
-#        uses: sonarsource/sonarqube-scan-action@master
-#        env:
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#          SONAR_HOST_URL: http://${{ steps.sonarqube.outputs.sonarqube_ip }}:9000
-
-#       - name: Run sonar-scanner
-#        run: |
-#          curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-#          unzip -qq sonar-scanner-cli-4.6.2.2472-linux.zip
-#          PATH=$PATH:/home/runner/work/forecast-app/forecast-app/sonar-scanner-4.6.2.2472-linux/bin
-#          sonar-scanner \
-#            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-#            -Dsonar.sources=. \
-#            -Dsonar.working.directory=. \
-#            -Dsonar.host.url="${{ steps.sonarqube.outputs.sonarqube_ip }}":9000 \
-#            -Dsonar.projectKey=forecast-app
-
-#      - name: Run sonar-scanner
-#        run: |
-#          curl -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-#          unzip -qq sonar-scanner-cli-4.6.2.2472-linux.zip
-#          PATH=$PATH:/home/runner/work/forecast-app/forecast-app/sonar-scanner-4.6.2.2472-linux/bin
-#          sonar-scanner \
-#            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-#            -Dsonar.sources=. \
-#            -Dsonar.working.directory=. \
-#            -Dsonar.host.url=http://localhost:9000 \
-#            -Dsonar.projectKey=forecast-app
-
-#      - uses: sonarsource/sonarqube-scan-action@master
-#        env:
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-#      - uses: sonarsource/sonarqube-quality-gate-action@master
-#        timeout-minutes: 5
-#        env:
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
   test:
+    needs: [sonarcloud]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -106,38 +36,74 @@ jobs:
       - name: Test our Docker-compose environment
         run: docker exec flask-webapp pytest
 
-  docker_build:
+  build:
     needs: [test]
     runs-on: ubuntu-latest
     steps:
-    - name: Check Out Repo 
-      uses: actions/checkout@v2
+      - name: Check Out Repo
+        uses: actions/checkout@v2
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build
+        run: |
+          docker build .
 
-    - name: Extract branch name
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: extract_branch
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Set up Docker Buildx
-      id: buildx
-      uses: docker/setup-buildx-action@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build and push
-      id: docker_build
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ./Dockerfile
-        push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-webapp:${{ steps.extract_branch.outputs.branch }}-latest
+      - name: Build, tag, and push image to amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: github-actions
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-    - name: Image digest
-      run: echo ${{ steps.docker_build.outputs.digest }}
+      - name: Logout of amazon ECR
+        if: always()
+        run: docker logout ${{ steps.login-ecr.outputs.registry }}
 
 
+#  docker_build:
+#    needs: [test]
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Check Out Repo
+#      uses: actions/checkout@v2
+#
+#    - name: Login to Docker Hub
+#      uses: docker/login-action@v1
+#      with:
+#        username: ${{ secrets.DOCKERHUB_USERNAME }}
+#        password: ${{ secrets.DOCKERHUB_TOKEN }}
+#
+#    - name: Extract branch name
+#      shell: bash
+#      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+#      id: extract_branch
+#
+#    - name: Set up Docker Buildx
+#      id: buildx
+#      uses: docker/setup-buildx-action@v1
+#
+#    - name: Build and push
+#      id: docker_build
+#      uses: docker/build-push-action@v2
+#      with:
+#        context: .
+#        file: ./Dockerfile
+#        push: true
+#        tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-webapp:${{ steps.extract_branch.outputs.branch }}-latest
+#
+#    - name: Image digest
+#      run: echo ${{ steps.docker_build.outputs.digest }}

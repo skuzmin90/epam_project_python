@@ -1,66 +1,87 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-    body {
-      background: url('static/weather.jpg');
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-size: cover;
-    }
-    </style>
+
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Weather Application For EPAM</title>
+    <title>Weather Forecast App</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 </head>
+
 <body>
-<h2 style="font-size: xx-large; font-style: normal; font-family:Verdana, Geneva, Tahoma, sans-serif; color: rgb(255, 255, 255);">Welcome to the weather forecast</h2>
-<p2 style="font-size: large; font-weight: bolder; font-family:Verdana, Geneva, Tahoma, sans-serif; color: rgb(255, 255, 255);">Just pick up a date in the below form <br> and you will see forcast at this day.<br>Let's start!<br></p2>
-<form class="form-inline" method="post" action="{{ url_for('results') }}">
-    <div class="form-group">
-        <div class="input-group">
-            <span class="input-group-addon" style="font-size: large; font-weight: bolder; font-family:Verdana, Geneva, Tahoma, sans-serif; color: rgb(255, 255, 255);">Please select a date: </span>
-            <select style="color:cornflowerblue; border-radius: 5cm; font-family:Verdana, Geneva, Tahoma, sans-serif;" name="date_select" class="selectpicker form-control">
-                {% for date in list_of_date %}
-                <option  value="{{ date }}" style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: medium; font-weight: 400; background-color:rgb(196, 222, 223) ; border-radius: 5cm;">{{date}}</option>
-                {% endfor %}
-            </select>
+
+    <div class="row">
+
+        <div class="col">
+
+            <div class="leftside">
+                <h2 style="font-size: xx-large; font-style: normal; font-family:Verdana, Geneva, Tahoma, sans-serif; color: rgb(255, 255, 255);">Weather Forecast Application</h2>
+                <p2 style="font-size: large; font-weight: bolder; font-family:Verdana, Geneva, Tahoma, sans-serif; color: rgb(255, 255, 255);">Just pick up a date in the below form <br> and you will see forcast at this day.<br></p2>
+                <form class="form-inline" method="post" action="{{ url_for('results') }}">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon" style="font-size: large; font-weight: bolder; font-family:Verdana, Geneva, Tahoma, sans-serif; color: rgb(255, 255, 255);">Please select a date: </span>
+                            <select style="color:cornflowerblue; border-radius: 5cm; font-family:Verdana, Geneva, Tahoma, sans-serif;" name="date_select" class="selectpicker form-control">
+                                {% for date in list_of_date %}
+                                <option  value="{{ date }}" style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: medium; font-weight: 400; background-color:rgb(196, 222, 223) ; border-radius: 5cm;">{{date}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button style="font-size: 2ch; font-family:Verdana, Geneva, Tahoma, sans-serif; color: azure; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type="submit" class="btn btn-default">Forecast</button>
+                        <form action="{{ url_for('update') }}">
+                            <input style="font-size: 2ch; border: 2cm; font-family:Verdana, Geneva, Tahoma, sans-serif; color: white; background-color:lightskyblue; border-radius: 5cm; font-weight: 700;" type="submit" name="update" value="Update"/>
+                        </form>
+                    </div>
+                </form>
+            </div>
+
         </div>
-        <button style="font-size: 2ch; font-family:Verdana, Geneva, Tahoma, sans-serif; color: azure; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type="submit" class="btn btn-default">Forecast</button>
-        <form action="{{ url_for('update') }}">
-            <input style="font-size: 2ch; border: 2cm; font-family:Verdana, Geneva, Tahoma, sans-serif; color: white; background-color:lightskyblue; border-radius: 5cm; font-weight: 700;" type="submit" name="update" value="Update"/>
-        </form>
+
+        <div class="col">
+
+            <div class="rightside" id="table-wrapper">
+                <div id="table-scroll">
+                    <table border="1" style="width:100px; color:white ; border: 2cm;">
+                        <caption>Weather results for {{select}} in Moscow</caption>
+                            <tr style="border: 4px; border-radius: 2cm;">
+                                <th id="id">ID</th>
+                                <th id="weather">WEATHER</th>
+                                <th id="wind_direction">WIND_DIRECTION</th>
+                                <th id="created">CREATED</th>
+                                <th id="applicable">APPLICABLE</th>
+                                <th id="temp_min">MIN</th>
+                                <th id="temp_max">MAX</th>
+                                <th id="temp">TEMP</th>
+                            </tr>
+                            {% for i in date_weather %}
+                            <tr>
+                                <td>{{ i[0] }}</td>
+                                <td>{{ i[1] }}</td>
+                                <td>{{ i[2] }}</td>
+                                <td>{{ i[3] }}</td>
+                                <td>{{ i[4] }}</td>
+                                <td>{{ i[5] }}</td>
+                                <td>{{ i[6] }}</td>
+                                <td>{{ i[7] }}</td>
+                            </tr>
+                            {% endfor %}
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
     </div>
-</form>
-<div>
-    <h2 style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: small; color: white;">Below you can see weather at {{select}} in Moscow</h2>
-    <table border="1" style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size:small; color:dodgerblue ; border: 2cm;">
-        <caption>Weather results for {{select}} in Moscow</caption>
-        <tr style="border: 4px; border-radius: 2cm;"></tr>
-        <th id="id">ID</th>
-        <th id="weather">WEATHER</th>
-        <th id="wind_direction">WIND_DIRECTION</th>
-        <th id="created">CREATED</th>
-        <th id="applicable">APPLICABLE</th>
-        <th id="temp_min">MIN</th>
-        <th id="temp_max">MAX</th>
-        <th id="temp">TEMP</th>
-      </tr>
-        {% for i in date_weather %}
-      <tr>
-        <td>{{ i[0] }}</td>
-        <td>{{ i[1] }}</td>
-        <td>{{ i[2] }}</td>
-        <td>{{ i[3] }}</td>
-        <td>{{ i[4] }}</td>
-        <td>{{ i[5] }}</td>
-        <td>{{ i[6] }}</td>
-        <td>{{ i[7] }}</td>
-      </tr>
-        {% endfor %}
-    </table>
-</div>
+    <div>
+        <footer>
+          <p>2021 EPAM Systems<br>
+          <a style="color:white;" href="mailto:sergei_kuzmin1@epam.com">sergei_kuzmin1@epam.com</a></p>
+        </footer>
+    </div>
+
 </body>
 </html>

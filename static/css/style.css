@@ -1,0 +1,63 @@
+/*
+	Solitude by TEMPLATE STOCK
+	templatestock.co @templatestock
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+*/
+img {
+    opacity: 0.5;
+}
+
+body {
+  background-image: url("../images/green.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  font-size: 1em;
+  opacity: 0.75;
+  text-align: left;
+  height: 100px;
+  line-height: 100px;
+}
+
+html {
+  font-family: sans-serif;
+  -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+}
+
+footer {
+	position: fixed;
+	width: 100%;
+	left: 0;
+	bottom: 0;
+	background-color: green;
+	color: white;
+	text-align: center;
+}
+#table-wrapper {
+  position:relative;
+}
+#table-scroll {
+  height:450px;
+  overflow:auto;
+  margin-top:20px;
+}
+#table-wrapper table {
+  width:100%;
+
+}
+#table-wrapper table * {
+  background:green;
+  color:white;
+  text-align:center;
+  font-size:small;
+}
+#table-wrapper table thead th .text {
+  position:absolute;
+  top:-20px;
+  z-index:2;
+  height:20px;
+  width:35%;
+  border:1px solid red;
+}
