@@ -87,7 +87,7 @@ jobs:
           cat app.yaml | envsubst | kubectl apply -f - -n production
           sleep 20
           kubectl get services -n production
-        if: ${{ ${{ steps.extract_branch.outputs.branch }}=="main" }}
+        if: ${{ steps.extract_branch.outputs.branch }}=="main"
 
 #  docker_build:
 #    needs: [test]
