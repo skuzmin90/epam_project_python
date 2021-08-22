@@ -78,13 +78,21 @@ jobs:
         if: always()
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
 
-      - name: Deploy app to EKS
+      - name: Deploy app to prod EKS
         run: |
           aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name eks
           cat app.yaml | envsubst | kubectl apply -f - -n prod
           sleep 20
           kubectl get services -n prod
         if: ${{ steps.extract_branch.outputs.branch }}=="main"
+
+      - name: Deploy app to test EKS
+        run: |
+          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name eks
+          cat app.yaml | envsubst | kubectl apply -f - -n test
+          sleep 20
+          kubectl get services -n test
+        if: ${{ steps.extract_branch.outputs.branch }}=="test"
 
 #  docker_build:
 #    needs: [test]
