@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: webapp
-          image: $IMAGE
+          image: "$IMAGE"
           ports:
            - containerPort: 80
 ---
