@@ -12,17 +12,17 @@ on:
       - test
 
 jobs:
-  sonarcloud:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#  sonarcloud:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 0
+#      - name: SonarCloud Scan
+#        uses: sonarsource/sonarcloud-github-action@master
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 #  test:
 #    needs: [sonarcloud]
@@ -67,6 +67,10 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: github_actions
           IMAGE_TAG: ${{ steps.extract_branch.outputs.branch }}-${{ steps.sha.outputs.sha_short }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY
@@ -92,6 +96,7 @@ jobs:
           cat app.yaml | envsubst | kubectl apply -f - -n test
           sleep 20
           kubectl get services -n test
+          echo http://$(kubectl get -n prod -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
         if: ${{ steps.extract_branch.outputs.branch }}=="test"
 
 #  docker_build:
