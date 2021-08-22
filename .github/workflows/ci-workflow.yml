@@ -72,21 +72,18 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
 
       - name: Logout of amazon ECR
         if: always()
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
 
-      - name: Set env
-        run: |
-          echo "IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
-
       - name: Deploy app to EKS
         run: |
           aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name eks
-          cat app.yaml | envsubst | kubectl apply -f - -n production
+          cat app.yaml | envsubst | kubectl apply -f - -n prod
           sleep 20
-          kubectl get services -n production
+          kubectl get services -n prod
         if: ${{ steps.extract_branch.outputs.branch }}=="main"
 
 #  docker_build:
