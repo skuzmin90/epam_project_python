@@ -90,14 +90,14 @@ jobs:
           kubectl get services -n prod
         if: ${{ steps.extract_branch.outputs.branch }}=="main"
 
-      - name: Deploy app to test EKS
-        run: |
-          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name eks
-          cat app.yaml | envsubst | kubectl apply -f - -n test
-          sleep 20
-          kubectl get services -n test
-          echo http://$(kubectl get -n prod -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
-        if: ${{ steps.extract_branch.outputs.branch }}=="test"
+#      - name: Deploy app to test EKS
+#        run: |
+#          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name eks
+#          cat app.yaml | envsubst | kubectl apply -f - -n test
+#          sleep 20
+#          kubectl get services -n test
+#          echo http://$(kubectl get -n prod -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
+#        if: ${{ steps.extract_branch.outputs.branch }}=="test"
 
 #  docker_build:
 #    needs: [test]
