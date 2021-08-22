@@ -77,6 +77,18 @@ jobs:
         if: always()
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
 
+      - name: Set env
+        run: |
+          echo "IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: Deploy app to EKS
+        run: |
+          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name eks
+          cat app.yaml | envsubst | kubectl apply -f - -n production
+          sleep 20
+          kubectl get services -n production
+        if: ${{ ${{ steps.extract_branch.outputs.branch }}=="main" }}
+
 #  docker_build:
 #    needs: [test]
 #    runs-on: ubuntu-latest
