@@ -88,7 +88,7 @@ jobs:
           cat app.yaml | envsubst | kubectl apply -f - -n prod
           sleep 20
           kubectl get services -n prod
-        if: ${{ steps.extract_branch.outputs.branch }}=="main"
+          echo http://$(kubectl get -n prod -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
 
 #      - name: Deploy app to test EKS
 #        run: |
