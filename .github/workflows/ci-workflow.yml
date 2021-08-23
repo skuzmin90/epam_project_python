@@ -103,7 +103,6 @@ jobs:
           psql -h postgres -U postgres -c "CREATE USER $DB_USER WITH PASSWORD $DB_PASSWORD;"
           psql -h postgres -U postgres -c "CREATE DATABASE $DB_NAME;"
           psql -h postgres -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME to $DB_USER;"
-        run: |
           aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name eks
           cat app.yaml | envsubst | kubectl apply -f - -n test
           kubectl get services -n test
