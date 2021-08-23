@@ -20,23 +20,6 @@ db_params = {
     "port": "5432"
 }
 
-# db_params = {
-#     "host": "terraform-20210823062728389000000009.cij2bgzi6jqj.us-east-1.rds.amazonaws.com",
-#     "database": "weather",
-#     "user": "epam",
-#     "password": "SSpassword",
-#     "port": "5432"
-# }
-
-# db_params = {
-#     "host": "192.168.208.138",
-#     "database": "weather",
-#     "user": "postgres",
-#     "password": "SSpassword",
-#     "port": "5432"
-# }
-
-
 def get_weather_result(city_id, date):
     url = "https://www.metaweather.com/api/location/{}/{}".format(city_id, date)
     weather_result = requests.get(url)
