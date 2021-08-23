@@ -92,10 +92,6 @@ jobs:
 #          echo $DB_PASSWORD
 #          echo $DB_NAME
 #
-#      - name: Logout of amazon ECR
-#        if: always()
-#        run: docker logout ${{ steps.login-ecr.outputs.registry }}
-#
 #      - name: Deploy app to prod EKS
 #        run: |
 #          aws eks --region us-east-1 update-kubeconfig --name eks
