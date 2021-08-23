@@ -47,67 +47,70 @@ jobs:
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
 
-      - name: test branch
-        if: github.ref == 'refs/heads/test'
-        run: |
-          echo TEST
+      - name: Set sha_short
+        id: sha
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
-      - name: main branch
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: github_actions
+          IMAGE_TAG: ${{ steps.extract_branch.outputs.branch }}-${{ steps.sha.outputs.sha_short }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: Deploy app to prod EKS
         if: github.ref == 'refs/heads/main'
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
-          echo MAIN
+          aws eks --region us-east-1 update-kubeconfig --name eks
+          cat app.yaml | envsubst | kubectl apply -f - -n prod
+          kubectl get services -n prod
+          echo http://$(kubectl get -n prod -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
 
-#      - name: Set sha_short
-#        id: sha
-#        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-#
-#      - name: Configure AWS credentials
-#        uses: aws-actions/configure-aws-credentials@v1
-#        with:
-#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: us-east-1
-#
-#      - name: Login to Amazon ECR
-#        id: login-ecr
-#        uses: aws-actions/amazon-ecr-login@v1
-#
-#      - name: Build, tag, and push image to amazon ECR
-#        env:
-#          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-#          ECR_REPOSITORY: github_actions
-#          IMAGE_TAG: ${{ steps.extract_branch.outputs.branch }}-${{ steps.sha.outputs.sha_short }}
-#          DB_HOST: ${{ secrets.DB_HOST }}
-#          DB_NAME: ${{ secrets.DB_NAME }}
-#          DB_USER: ${{ secrets.DB_USER }}
-#          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-#        run: |
-#          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY .
-#          docker push $ECR_REGISTRY/$ECR_REPOSITORY
-#          docker tag $ECR_REGISTRY/$ECR_REPOSITORY $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-#          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-#          echo "IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
-#          echo $DB_HOST
-#          echo $DB_USER
-#          echo $DB_PASSWORD
-#          echo $DB_NAME
-#
-#      - name: Deploy app to prod EKS
-#        run: |
-#          aws eks --region us-east-1 update-kubeconfig --name eks
-#          cat app.yaml | envsubst | kubectl apply -f - -n prod
-#          sleep 20
-#          kubectl get services -n prod
-#          echo http://$(kubectl get -n prod -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
+      - name: Deploy app to test EKS
+        if: github.ref == 'refs/heads/test'
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.TEST_DB_NAME }}
+          DB_USER: ${{ secrets.TEST_DB_USER }}
+          DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+        run: |
+          apt-get install --yes --no-install-recommends postgresql-client
+          psql -h postgres -U postgres -c "CREATE USER $DB_USER WITH PASSWORD $DB_PASSWORD;"
+          psql -h postgres -U postgres -c "CREATE DATABASE $DB_NAME;"
+          psql -h postgres -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME to $DB_USER;"
+        run: |
+          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name eks
+          cat app.yaml | envsubst | kubectl apply -f - -n test
+          kubectl get services -n test
+          echo http://$(kubectl get -n prod -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
 
-#      - name: Deploy app to test EKS
-#        run: |
-#          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name eks
-#          cat app.yaml | envsubst | kubectl apply -f - -n test
-#          sleep 20
-#          kubectl get services -n test
-#          echo http://$(kubectl get -n prod -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
-#        if: ${{ steps.extract_branch.outputs.branch }}=="test"
+
+
 #  docker_build:
 #    needs: [test]
 #    runs-on: ubuntu-latest
