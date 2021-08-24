@@ -11,3 +11,10 @@ def test_results():
     response = client.get('/results', data={"select": "2021-08-01"})
     assert request.status_code == 200
     assert response.status_code == 200
+
+def test_update():
+    client = app.test_client()
+    request =  client.post('/update', data={"select": "2021-08-01"})
+    response = client.get('/update', data={"select": "2021-08-01"})
+    assert request.status_code == 200
+    assert response.status_code == 200

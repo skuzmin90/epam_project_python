@@ -12,11 +12,19 @@ days = [('{:04}/{:02}/{:02}/'.format(datetime.now().year, datetime.now().month, 
 column_names = ["id", "weather_state_name", "wind_direction_compass", "created",
                     "applicable_date", "min_temp", "max_temp", "the_temp"]
 
+# db_params = {
+#     "host": os.getenv('DB_HOST'),
+#     "database": os.getenv('DB_NAME'),
+#     "user": os.getenv('DB_USER'),
+#     "password": os.getenv('DB_PASSWORD'),
+#     "port": "5432"
+# }
+
 db_params = {
-    "host": os.getenv('DB_HOST'),
-    "database": os.getenv('DB_NAME'),
-    "user": os.getenv('DB_USER'),
-    "password": os.getenv('DB_PASSWORD'),
+    "host": "192.168.208.138",
+    "database": "postgres",
+    "user": "epam",
+    "password": "SSpassword",
     "port": "5432"
 }
 
@@ -90,13 +98,8 @@ def results():
 
 @app.route('/update', methods=['POST','GET'])
 def update():
-    conn = connect(db_params)
-    cursor = conn.cursor()
-    cursor.execute(""" TRUNCATE forecast;  """)
     insert_table()
-    conn.commit()
-    conn.close()
-    return render_template('results.html', list_of_date=list_of_date)
+    return render_template('update.html', list_of_date=list_of_date)
 
 if __name__ == '__main__':
      app.run()

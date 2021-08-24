@@ -12,25 +12,45 @@
 
 </head>
 <body>
-  <div>
-  <h2 style="font-size: xx-large; font-style: normal; font-family:Verdana, Geneva, Tahoma, sans-serif; color:white;">Weather Forecast Application</h2>
-    <p2 style="font-size: large; font-weight: bolder; font-family:Verdana, Geneva, Tahoma, sans-serif; color:white;">Just pick up a date in the below form <br> and you will see forcast at this day.<br></p2>
-    <form class="form-inline" method="post" action="{{ url_for('results') }}">
-    <div class="form-group">
-      <div class="input-group">
-          <span class="input-group-addon" style="font-size: large; font-weight: bolder; font-family:Verdana, Geneva, Tahoma, sans-serif; color:white;">Please select a date:</span>
-              <select style="border-radius: 5cm; font-family:Verdana, Geneva, Tahoma, sans-serif;" name="date_select" class="selectpicker form-control">
-                {% for date in list_of_date %}
-                  <option  value="{{ date }}" style="font-size: medium; font-family:Verdana, Geneva, Tahoma, sans-serif; font-weight: 400; background-color:rgb(196, 222, 223) ; border-radius: 5cm;">{{date}}</option>
-                {% endfor %}
-              </select>
-      </div>
-    <button style="font-size: 2ch; font-family:Verdana, Geneva, Tahoma, sans-serif; color: white; background-color:lightskyblue; border:thick; border: azure; border-radius: 5cm; font-weight: 700;" type="submit" class="btn btn-default">Forecast</button>
+    <div class="row no-gutters">
+
+        <div class="col-md-6 no-gutters">
+
+            <div class="leftside">
+
+              <form class="form-inline" method="post" action="{{ url_for('results') }}">
+                <div>
+                    
+                  <h style="font-size: x-large;">Weather Forecast Application</h>
+                  <p>Just pick up a date in the below form,<br> and you will see the forecast for this day.<br></p>
+                  <span class="input-group-addon">Please select a date:</span>
+                  <div class="select">
+
+                    <select name="date_select" class="select">
+                      {% for date in list_of_date %}
+                        <option class="select"  value="{{ date }}">{{date}}</option>
+                      {% endfor %}<br/>
+                    </select>
+                    <div class="select_arrow">
+                    </div>
+                  </div>
+                  <div>
+                    <button class="myButton" type="submit">Forecast</button>
+                  </div>
+
+                </div>
+                  
+              </form>
+                
+            </div>
+
+        </div>
+
     </div>
-</form>
+
   </div>
     <footer>
-      <p>2021 EPAM Systems<br>
+      <p>&copy; 2021 EPAM Systems<br>
       <a style="color:white;" href="mailto:sergei_kuzmin1@epam.com">sergei_kuzmin1@epam.com</a></p>
     </footer>
 </body>
