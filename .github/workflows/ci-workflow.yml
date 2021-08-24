@@ -35,6 +35,7 @@ jobs:
       - name: Test our Docker-compose environment
         run: docker exec flask-webapp pytest
 
+
 #  build:
 #    needs: [sonarcloud]
 #    runs-on: ubuntu-latest
