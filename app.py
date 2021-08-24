@@ -12,21 +12,21 @@ days = [('{:04}/{:02}/{:02}/'.format(datetime.now().year, datetime.now().month, 
 column_names = ["id", "weather_state_name", "wind_direction_compass", "created",
                     "applicable_date", "min_temp", "max_temp", "the_temp"]
 
-# db_params = {
-#     "host": os.getenv('DB_HOST'),
-#     "database": os.getenv('DB_NAME'),
-#     "user": os.getenv('DB_USER'),
-#     "password": os.getenv('DB_PASSWORD'),
-#     "port": "5432"
-# }
-
 db_params = {
-    "host": "192.168.208.138",
-    "database": "postgres",
-    "user": "epam",
-    "password": "SSpassword",
+    "host": os.getenv('DB_HOST'),
+    "database": os.getenv('DB_NAME'),
+    "user": os.getenv('DB_USER'),
+    "password": os.getenv('DB_PASSWORD'),
     "port": "5432"
 }
+
+# db_params = {
+#     "host": "192.168.208.138",
+#     "database": "postgres",
+#     "user": "epam",
+#     "password": "SSpassword",
+#     "port": "5432"
+# }
 
 def get_weather_result(city_id, date):
     url = "https://www.metaweather.com/api/location/{}/{}".format(city_id, date)
