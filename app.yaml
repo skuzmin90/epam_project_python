@@ -75,5 +75,6 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: webapp-external-service
-              servicePort: 80
+              name: webapp-external-service
+              port:
+                number: 80
