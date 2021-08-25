@@ -103,7 +103,8 @@ jobs:
           NAMESPACE: ${{ steps.extract_branch.outputs.branch }}
         run: |
           apt-get install --yes --no-install-recommends postgresql-client
-          cat create_db.sh | envsubst | sudo ./create_db.sh
+          chmod +x ./create_db.sh
+          cat create_db.sh | envsubst | sh ./create_db.sh
           aws eks --region us-east-1 update-kubeconfig --name eks
           cat app.yaml | envsubst | kubectl apply -f - -n $NAMESPACE
           sleep 40
