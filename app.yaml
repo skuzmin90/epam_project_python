@@ -64,23 +64,16 @@ spec:
       port: 80
       targetPort: 80
 ---
-apiVersion: networking.k8s.io/v1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: app-ingress
   namespace: "$NAMESPACE"
 spec:
-  defaultBackend:
-    service:
-      name: webapp-external-service
-      port:
-        number: 80
   rules:
     - host: app.$NAMESPACE.com
       http:
         paths:
           - backend:
-            service:
-              name: webapp-external-service
-              port:
-                number: 80
+              serviceName: webapp-external-service
+              servicePort: 80
