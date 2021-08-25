@@ -109,35 +109,3 @@ jobs:
           sleep 40
           kubectl get services -n $NAMESPACE
           echo http://$(kubectl get -n $NAMESPACE -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
-
-
-
-#  docker_build:
-#    needs: [test]
-#    runs-on: ubuntu-latest
-#    steps:
-#    - name: Check Out Repo
-#      uses: actions/checkout@v2
-#    - name: Login to Docker Hub
-#      uses: docker/login-action@v1
-#      with:
-#        username: ${{ secrets.DOCKERHUB_USERNAME }}
-#        password: ${{ secrets.DOCKERHUB_TOKEN }}
-#    - name: Extract branch name
-#      shell: bash
-#      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-#      id: extract_branch
-#    - name: Set up Docker Buildx
-#      id: buildx
-#      uses: docker/setup-buildx-action@v1
-#    - name: Build and push
-#      id: docker_build
-#      uses: docker/build-push-action@v2
-#      with:
-#        context: .
-#        file: ./Dockerfile
-#        push: true
-#        tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-webapp:${{ steps.extract_branch.outputs.branch }}-latest
-#
-#    - name: Image digest
-#      run: echo ${{ steps.docker_build.outputs.digest }}
