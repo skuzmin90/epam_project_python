@@ -63,17 +63,3 @@ spec:
     - protocol: "TCP"
       port: 80
       targetPort: 80
----
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: app-ingress
-  namespace: "$NAMESPACE"
-spec:
-  rules:
-    - host: app.$NAMESPACE.com
-      http:
-        paths:
-          - backend:
-              serviceName: webapp-external-service
-              servicePort: 80
