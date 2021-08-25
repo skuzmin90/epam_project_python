@@ -70,14 +70,17 @@ metadata:
   name: app-ingress
   namespace: "$NAMESPACE"
 spec:
+  defaultBackend:
+    service:
+      name: webapp-external-service
+      port:
+        number: 80
   rules:
     - host: app.$NAMESPACE.com
       http:
         paths:
-          - pathType: Prefix
-            path: "/*"
-            backend:
-              service:
-                name: webapp-external-service
-                port:
-                  number: 80
+          - backend:
+            service:
+              name: webapp-external-service
+              port:
+                number: 80
