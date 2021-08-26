@@ -31,9 +31,9 @@ spec:
               value: "$DB_PASSWORD"
           resources:
             limits:
-              cpu: 300m
+              cpu: 500m
             requests:
-              cpu: 100m
+              cpu: 200m
 
 ---
 apiVersion: v1
@@ -69,17 +69,3 @@ spec:
     - protocol: "TCP"
       port: 80
       targetPort: 80
-
----
-apiVersion: autoscaling/v1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: autoscaling
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: webapp
-  minReplicas: 1
-  maxReplicas: 5
-  targetCPUUtilizationPercentage: 50
