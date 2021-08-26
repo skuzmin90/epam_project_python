@@ -67,10 +67,6 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: github_actions
           IMAGE_TAG: ${{ steps.sha.outputs.sha_short }}-${{ steps.extract_branch.outputs.branch }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY
@@ -100,11 +96,8 @@ jobs:
           DB_NAME: ${{ secrets.TEST_DB_NAME }}
           DB_USER: ${{ secrets.TEST_DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          NAMESPACE: ${{ steps.extract_branch.outputs.branch }}
+          NAMESPACE: test
         run: |
-          apt-get install --yes --no-install-recommends postgresql-client
-          chmod +x ./create_db.sh
-          cat create_db.sh | envsubst | sh ./create_db.sh
           aws eks --region us-east-1 update-kubeconfig --name eks
           cat app.yaml | envsubst | kubectl apply -f - -n $NAMESPACE
           sleep 40
