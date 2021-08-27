@@ -94,10 +94,11 @@ jobs:
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_NAME: ${{ secrets.TEST_DB_NAME }}
-          DB_USER: ${{ secrets.TEST_DB_USER }}
+          DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           NAMESPACE: test
         run: |
+          cat create_db.sh | envsubst | sh create_db.sh
           aws eks --region us-east-1 update-kubeconfig --name eks
           cat app.yaml | envsubst | kubectl apply -f - -n $NAMESPACE
           sleep 40
