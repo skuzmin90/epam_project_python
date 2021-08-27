@@ -103,3 +103,8 @@ jobs:
           sleep 40
           kubectl get services -n $NAMESPACE
           echo http://$(kubectl get -n $NAMESPACE -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
+
+      - name: Sleep for 60 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '60s'
