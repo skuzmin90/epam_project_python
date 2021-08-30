@@ -85,7 +85,7 @@ jobs:
           aws eks --region us-east-1 update-kubeconfig --name eks
           cat app.yaml | envsubst | kubectl apply -f - -n $NAMESPACE
           kubectl get services -n $NAMESPACE
-          sleep 40
+          sleep 60
           echo http://$(kubectl get -n $NAMESPACE -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
 
       - name: Deploy app to test EKS
@@ -100,11 +100,6 @@ jobs:
           cat create_db.sh | envsubst | sh create_db.sh
           aws eks --region us-east-1 update-kubeconfig --name eks
           cat app.yaml | envsubst | kubectl apply -f - -n $NAMESPACE
-          sleep 40
+          sleep 60
           kubectl get services -n $NAMESPACE
           echo http://$(kubectl get -n $NAMESPACE -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
-
-      - name: Sleep for 60 seconds
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '60s'
