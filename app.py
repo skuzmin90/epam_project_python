@@ -21,7 +21,6 @@ db_params = {
     "password": os.getenv('DB_PASSWORD'),
     "port": "5432"
 }
-
 # db_params = {
 #     "host": "192.168.208.138",
 #     "database": "postgres",
