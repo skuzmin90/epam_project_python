@@ -1,10 +1,12 @@
 import sys
 import os
+import time
 import requests
 import psycopg2
 import calendar
 from datetime import datetime
-from flask import Flask, render_template, request
+from joblib import Parallel, delayed
+from flask import Flask, render_template, request, jsonify
 
 city_id = requests.get("https://www.metaweather.com/api/location/search/?query={}".format('Moscow')).json()[0]['woeid']
 num_days = calendar.monthrange(datetime.now().year, datetime.now().month)[1]
@@ -12,21 +14,21 @@ days = [('{:04}/{:02}/{:02}/'.format(datetime.now().year, datetime.now().month, 
 column_names = ["id", "weather_state_name", "wind_direction_compass", "created",
                     "applicable_date", "min_temp", "max_temp", "the_temp"]
 
-db_params = {
-    "host": os.getenv('DB_HOST'),
-    "database": os.getenv('DB_NAME'),
-    "user": os.getenv('DB_USER'),
-    "password": os.getenv('DB_PASSWORD'),
-    "port": "5432"
-}
-
 # db_params = {
-#     "host": "192.168.208.138",
-#     "database": "postgres",
-#     "user": "epam",
-#     "password": "SSpassword",
+#     "host": os.getenv('DB_HOST'),
+#     "database": os.getenv('DB_NAME'),
+#     "user": os.getenv('DB_USER'),
+#     "password": os.getenv('DB_PASSWORD'),
 #     "port": "5432"
 # }
+
+db_params = {
+    "host": "192.168.208.138",
+    "database": "postgres",
+    "user": "epam",
+    "password": "SSpassword",
+    "port": "5432"
+}
 
 def get_weather_result(city_id, date):
     url = "https://www.metaweather.com/api/location/{}/{}".format(city_id, date)
@@ -75,6 +77,13 @@ def postgresql_query(conn, select_query):
     cursor.close()
     return res
 
+def worker(i):
+    print('worker ', i)
+    x = 0
+    while x < 1000:
+        print(x)
+        x += 1
+
 insert_table()
 
 list_of_date = [item[0] for item in postgresql_query(conn=connect(db_params),
@@ -100,6 +109,18 @@ def results():
 def update():
     insert_table()
     return render_template('update.html', list_of_date=list_of_date)
+
+@app.route('/stress')
+def myfunc():
+    start_time = time.time()
+    Parallel(n_jobs=-1, prefer="processes", verbose=0)(
+            delayed(worker)(num)
+            for num in range(12000)
+    )
+    end_time = time.time() - start_time
+    resp = jsonify(success=True, time=str(end_time))
+    resp.status_code = 200
+    return resp
 
 if __name__ == '__main__':
      app.run()
