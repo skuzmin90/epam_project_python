@@ -44,24 +44,20 @@
                       
                 </form>
 
-                <div style="width:200px;">
-                    <div class="update" style="float: left; width: 100px">
+                <div style="width:150px;">
+                    <div class="update" style="float: left; width: 50px">
                         <form class="form-inline" method="post" action="{{ url_for('update') }}">
                         <button class="myButton" type="submit">Update</button>
                         <!-- <input type="submit" name="update" value="Update"/> -->
                     </form>
                     </div>
-                    <div class="update" style="float: right; width: 100px">
+                    <div class="update" style="float: right; width: 50px">
                         <form class="form-inline" action="{{ url_for('stress') }}">
                         <button class="myButton" type="submit">Stress</button>
                         <!-- <input type="submit" name="update" value="Update"/> -->
                     </form>
                     </div>
-
                 </div>
-
-                </div>
-
 
             </div>
 
@@ -71,7 +67,7 @@
 
             <div class="rightside" id="table-wrapper">
                 <div id="table-scroll">
-                    <table border="1" style="width:100px; color:white ; border: 2cm;">
+                    <table border="1" style="width:60px; color:white ; border: 2cm;">
                         <caption align="top">Weather results for {{select}} in Moscow</caption>
                             <tr style="border: 4px; border-radius: 2cm;">
                                 <th id="id">ID</th>
