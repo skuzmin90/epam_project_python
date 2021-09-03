@@ -1,8 +1,17 @@
+# create amazon-cloudwatch namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: "$NAMESPACE"
+  labels:
+    name: "$NAMESPACE"
+
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webapp
+  namespace: "$NAMESPACE"
   labels:
     app: webapp
 spec:
@@ -46,6 +55,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: internal-webapp-service
+  namespace: "$NAMESPACE"
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-type: nlb
     service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: 'true'
@@ -64,6 +74,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: webapp-external-service
+  namespace: "$NAMESPACE"
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-type: nlb
     service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: 'true'
@@ -81,6 +92,7 @@ apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   name: webapp-hpa
+  namespace: "$NAMESPACE"
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
