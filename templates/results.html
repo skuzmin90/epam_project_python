@@ -44,16 +44,24 @@
                       
                 </form>
 
-                <div class="update">
-                    <form class="form-inline" method="post" action="{{ url_for('update') }}">
+                <div style="width:200px;">
+                    <div class="update" style="float: left; width: 100px">
+                        <form class="form-inline" method="post" action="{{ url_for('update') }}">
                         <button class="myButton" type="submit">Update</button>
                         <!-- <input type="submit" name="update" value="Update"/> -->
                     </form>
-                    <form class="form-inline" action="{{ url_for('myfunc') }}">
+                    </div>
+                    <div class="update" style="float: right; width: 100px">
+                        <form class="form-inline" action="{{ url_for('stress') }}">
                         <button class="myButton" type="submit">Stress</button>
                         <!-- <input type="submit" name="update" value="Update"/> -->
                     </form>
+                    </div>
+
                 </div>
+
+                </div>
+
 
             </div>
 

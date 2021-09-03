@@ -37,12 +37,12 @@ def get_weather_result(city_id, date):
 def connect(db_params):
     conn = None
     try:
-        # print('Connecting to the PostgreSQL database...')
+        print('Connecting to the PostgreSQL database...')
         conn = psycopg2.connect(**db_params)
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
         sys.exit(1)
-    # print("Connection successful")
+    print("Connection successful")
     return conn
 
 def insert_table():
@@ -110,7 +110,7 @@ def update():
     return render_template('update.html', list_of_date=list_of_date)
 
 @app.route('/stress')
-def myfunc():
+def stress():
     start_time = time.time()
     Parallel(n_jobs=-1, prefer="processes", verbose=0)(
             delayed(worker)(num)
