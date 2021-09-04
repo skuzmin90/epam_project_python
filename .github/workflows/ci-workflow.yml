@@ -1,4 +1,4 @@
-name: Build Application
+name: Build and Deliver Application
 
 on:
 #  workflow_dispatch:
@@ -37,6 +37,13 @@ jobs:
   build:
     needs: [test]
     runs-on: ubuntu-latest
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      REGION: eu-central-1
+      DEPLOYMENT_NAME: webapp
+
     steps:
       - name: Check Out Repo
         uses: actions/checkout@v2
@@ -76,32 +83,22 @@ jobs:
       - name: Deploy app to prod EKS
         if: github.ref == 'refs/heads/main'
         env:
-          DB_HOST: ${{ secrets.DB_HOST }}
           DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           NAMESPACE: ${{ steps.extract_branch.outputs.branch }}
-          REGION: ${{ secrets.AWS_REGION }}
         run: |
           aws eks --region $REGION update-kubeconfig --name eks
           cat app.yaml | envsubst | kubectl apply -f -
-          kubectl get services -n $NAMESPACE
-          sleep 60
+          kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE
           echo http://$(kubectl get -n $NAMESPACE -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
 
       - name: Deploy app to test EKS
         if: github.ref == 'refs/heads/test'
         env:
-          DB_HOST: ${{ secrets.DB_HOST }}
           DB_NAME: ${{ secrets.TEST_DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           NAMESPACE: ${{ steps.extract_branch.outputs.branch }}
-          REGION: ${{ secrets.AWS_REGION }}
         run: |
           cat create_db.sh | envsubst | sh create_db.sh
           aws eks --region $REGION update-kubeconfig --name eks
           cat app.yaml | envsubst | kubectl apply -f -
-          sleep 60
-          kubectl get services -n $NAMESPACE
+          kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE
           echo http://$(kubectl get -n $NAMESPACE -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
