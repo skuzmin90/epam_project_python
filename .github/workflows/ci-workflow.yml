@@ -98,4 +98,4 @@ jobs:
           aws eks --region $REGION update-kubeconfig --name eks
           cat app.yaml | envsubst | kubectl apply -f -
           kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE
-          echo http://$(kubectl get -n $NAMESPACE -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service)
+          kubectl get -n $NAMESPACE -o jsonpath="{.status.loadBalancer.ingress[0].hostname}" services webapp-external-service
